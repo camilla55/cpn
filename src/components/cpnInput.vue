@@ -17,10 +17,11 @@
 /*
 需求：
 1.子组件中的input值改变，同时父组件中的值也相应修改
-2.number2的值是number1的100倍，number1是number2的1/100
+2.number2的值是number1的100倍，number1是number2的1/100 (两种方法，还可以用watch的方式)
 
 注意：不要在子组件中修改props中的值，否则会报错
-通过$emit事件 把value传出去，用于修改父组件中的值
+通过$emit方法传递事件 把value传出去，用于修改父组件中的值
+$emit 是一个非常有用的实例方法，它允许子组件向父组件触发事件并传递数据
 
 */
 export default{
@@ -35,6 +36,16 @@ export default{
       dnumber2 : this.number2
     }
   },
+  watch:{
+      dnumber1(newValue){
+        this.dnumber2 = newValue *100;
+        this.$emit('num2Change' ,this.dnumber2); 
+      },
+      dnumber2(newValue){
+        this.dnumber1 = newValue /100;
+        this.$emit('num1Change',this.dnumber1);
+      }
+  },
   methods:{
     // increaseFn(){
     //     this.num++
@@ -46,20 +57,20 @@ export default{
     dnumber1Input(event){
       //1.将input中的值赋值到dnumber中
       this.dnumber1 = event.target.value;
-      //2.为了让父组件可以修改值，发出一个事件，通过$emit事件将value值传递出去，父组件中传方法@num1Change
+      //2.为了让父组件可以修改值，发出一个事件，通过$emit方法，触发事件将value值传递出去，父组件中传方法@num1Change
       this.$emit('num1Change' ,this.dnumber1);
       //3.同时修改dnumber2的值
-      this.dnumber2 = this.dnumber1*100;
+      //this.dnumber2 = this.dnumber1*100;
       //4.dnumber1发生改变时，相应的dnumber2发生改变的值也要传出去
-      this.$emit('num2Change' ,this.dnumber2); 
+      //this.$emit('num2Change' ,this.dnumber2); 
     },
     dnumber2Input(event){
       this.dnumber2 = event.target.value;
       this.$emit('num2Change' ,this.dnumber2);
       //3.同时修改dnumber1的值
-      this.dnumber1 = this.dnumber2/100;
+      //this.dnumber1 = this.dnumber2/100;
       //4.dnumber2发生改变时，相应的dnumber1发生改变的值也要传出去
-      this.$emit('num1Change' ,this.dnumber1); 
+      //this.$emit('num1Change' ,this.dnumber1); 
     }
   }
 
